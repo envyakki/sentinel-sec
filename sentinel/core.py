@@ -1,11 +1,13 @@
 """
 Core scanning engine for SentinelSec.
+Combines fast regex pattern detection with deep AST semantic & taint analysis.
 """
 
 import os
 import re
 from typing import List, Dict, Any
 from sentinel.rules import SecurityRules, Finding
+from sentinel.ast_scanner import ASTScanner
 
 class ScanReport:
     def __init__(self, target_path: str):
@@ -51,16 +53,33 @@ class Scanner:
         self.ignored_dirs = ignored_dirs or [".git", "__pycache__", "venv", ".venv", "node_modules", "dist", "build"]
 
     def scan_code(self, source_code: str, file_name: str = "<inline>") -> List[Finding]:
-        findings = []
-        lines = source_code.splitlines()
+        """
+        Hybrid multi-pass scanner:
+        1. AST Semantic Pass (Multi-line analysis, taint-tracking, argument inspection)
+        2. Regex Pattern Pass (Secrets, tokens, credentials, multi-language detection)
+        """
+        findings: List[Finding] = []
+        ast_covered_keys = set()
 
+        # Pass 1: AST Semantic Inspection (runs on Python files or inline snippets)
+        if file_name.endswith(".py") or file_name == "<inline>":
+            ast_findings = ASTScanner.analyze(source_code)
+            for f in ast_findings:
+                findings.append(f)
+                ast_covered_keys.add((f.rule_id, f.line_number))
+
+        # Pass 2: Regex Pattern Inspection
+        lines = source_code.splitlines()
         for line_idx, line in enumerate(lines, 1):
-            # Skip empty lines or standard single-line comment blocks
             stripped = line.strip()
             if not stripped or stripped.startswith("#"):
                 continue
 
             for rule in SecurityRules.PATTERNS:
+                # If AST already captured this rule on this line, skip duplicate regex finding
+                if (rule["id"], line_idx) in ast_covered_keys:
+                    continue
+
                 if re.search(rule["regex"], line):
                     snippet = stripped if len(stripped) <= 120 else stripped[:117] + "..."
                     findings.append(Finding(
@@ -74,6 +93,9 @@ class Scanner:
                         cwe=rule["cwe"],
                         owasp=rule["owasp"]
                     ))
+
+        # Sort findings by line number
+        findings.sort(key=lambda x: x.line_number)
         return findings
 
     def scan_path(self, target_path: str) -> ScanReport:
@@ -101,5 +123,5 @@ class Scanner:
                 report.findings.extend(file_findings)
                 report.scanned_files += 1
                 report.scanned_lines += len(content.splitlines())
-        except Exception as e:
+        except Exception:
             pass
