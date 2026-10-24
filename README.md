@@ -48,14 +48,18 @@ SentinelSec resolves this by parsing the Python syntax tree:
 
 ### 🚀 Quickstart & Installation
 
-```bash
-# Clone the repository
+`ash
+# Option 1: Direct pip install from GitHub (Instant CLI access)
+pip install git+https://github.com/envyakki/sentinel-sec.git
+
+# Option 2: Clone & install editable locally
 git clone https://github.com/envyakki/sentinel-sec.git
 cd sentinel-sec
+pip install -e .
 
-# Run tests to verify the scanner (12 unit tests covering Regex + AST)
+# Run test suite (12/12 unit tests covering Regex + AST)
 python -m unittest discover tests/
-```
+`
 
 ---
 
@@ -124,3 +128,6 @@ sentinel-sec/
 
 ### 👤 Author
 Engineered with precision by **[@envyakki](https://github.com/envyakki)**.
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/akshay-kumar-4999a7444/)
+[![X / Twitter](https://img.shields.io/badge/X-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/envyakki)

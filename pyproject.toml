@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sentinel-sec"
+version = "1.1.0"
+description = "Automated Static Application Security Testing (SAST) & vulnerability audit engine"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Akshay Kumar", email = "akshchik12@gmail.com" }]
+keywords = ["security", "sast", "vulnerability-scanner", "owasp", "ast", "devsecops"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Security",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+sentinel = "cli:main"
+
+[project.urls]
+Homepage = "https://envyakki.github.io/sentinel-sec/"
+Repository = "https://github.com/envyakki/sentinel-sec"
