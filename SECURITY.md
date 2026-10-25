@@ -17,3 +17,7 @@ If you discover a security flaw or bypass in the AST scanner or regex engine:
 2. Send report details to **`akshchik12@gmail.com`**.
 3. Include the vulnerable pattern, reproduction script, and AST node details.
 4. We acknowledge receipt within 24 hours and publish patches promptly.
+
+## Security Team & Maintainers
+- Lead Security Engineer: **@envyakki** (Akshay Kumar)
+- Security Peer Reviewer: **@nvmakshay24-cpu**
